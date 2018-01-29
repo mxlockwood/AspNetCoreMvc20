@@ -21,7 +21,7 @@ namespace AspNetCoreMvc20.Models
         [Display(Name = "First Name")]
         [DataType("varchar(40)")]
         [StringLength(40)]
-        public string FirstMidName { get; set; }
+        public string FirstName { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -31,7 +31,7 @@ namespace AspNetCoreMvc20.Models
         [Display(Name = "Full Name")]
         public string FullName
         {
-            get { return LastName + ", " + FirstMidName; }
+            get { return LastName + ", " + FirstName; }
         }
 
         public ICollection<CourseAssignment> CourseAssignments { get; set; }

@@ -10,7 +10,7 @@ namespace AspNetCoreMvc20.Data
     {
         public static void Initialize(AppDbContext context)
         {
-            //context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
             // Look for any students.
             if (context.Students.Any())
@@ -46,15 +46,15 @@ namespace AspNetCoreMvc20.Data
 
             var instructors = new Instructor[]
             {
-                new Instructor { FirstMidName = "Kim",     LastName = "Abercrombie",
+                new Instructor { FirstName = "Kim",     LastName = "Abercrombie",
                     HireDate = DateTime.Parse("1995-03-11") },
-                new Instructor { FirstMidName = "Fadi",    LastName = "Fakhouri",
+                new Instructor { FirstName = "Fadi",    LastName = "Fakhouri",
                     HireDate = DateTime.Parse("2002-07-06") },
-                new Instructor { FirstMidName = "Roger",   LastName = "Harui",
+                new Instructor { FirstName = "Roger",   LastName = "Harui",
                     HireDate = DateTime.Parse("1998-07-01") },
-                new Instructor { FirstMidName = "Candace", LastName = "Kapoor",
+                new Instructor { FirstName = "Candace", LastName = "Kapoor",
                     HireDate = DateTime.Parse("2001-01-15") },
-                new Instructor { FirstMidName = "Roger",   LastName = "Zheng",
+                new Instructor { FirstName = "Roger",   LastName = "Zheng",
                     HireDate = DateTime.Parse("2004-02-12") }
             };
 

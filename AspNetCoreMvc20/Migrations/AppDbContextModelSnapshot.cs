@@ -99,7 +99,7 @@ namespace AspNetCoreMvc20.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("FirstMidName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnName("FirstName")
                         .HasMaxLength(40);

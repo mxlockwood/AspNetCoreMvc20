@@ -1,0 +1,56 @@
+﻿@model IEnumerable<AspNetCoreMvc20.Models.Course>
+
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<h2>Courses</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="col-sm-8 col-sm-offset-0 col-md-10 col-md-offset-2 col-lg-12 col-lg-offset-0">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Credits)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Department)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Credits)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+            }
+        </tbody>
+    </table>
+</div>

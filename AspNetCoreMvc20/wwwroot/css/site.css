@@ -13,15 +13,13 @@
     font-size: 1.25em;
 }
 
-input {
-     
-}
-
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    padding-bottom: 20px;
+    border-radius: 0.5em;
     font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
     font-size: 1.25em;
     font-weight: 600;
@@ -30,7 +28,6 @@ input {
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#a9a9a9, endColorstr=#8e8e8e);
     background-image: -moz-linear-gradient(center top -90deg, #a9a9a9, #8e8e8e);
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#a9a9a9), to(#8e8e8e));
-    border-radius: 1.0em;
 }
 
 th {
@@ -40,6 +37,7 @@ th {
 footer {
     opacity: 1.0;
     text-shadow: 2px 2px 2px #ddd;
+    text-align: center;
 }
 
 tr {
@@ -47,16 +45,31 @@ tr {
     text-align: left;
     vertical-align: middle;
 }
-    
+
+.table > thead > tr > td.success,
+.table > tbody > tr > td.success,
+.table > tfoot > tr > td.success,
+.table > thead > tr > th.success,
+.table > tbody > tr > th.success,
+.table > tfoot > tr > th.success,
+.table > thead > tr.success > td,
+.table > tbody > tr.success > td,
+.table > tfoot > tr.success > td,
+.table > thead > tr.success > th,
+.table > tbody > tr.success > th,
+.table > tfoot > tr.success > th {
+    background-color: #ddd;
+}
+
 
 .center-stage {
     width: 100%;
 }
 
-.center-stage a {
-    margin-top: 20px;
-    margin-left: 0;
-}
+    .center-stage a {
+        margin-top: 20px;
+        margin-left: 0;
+    }
 
 .transition_color {
     color: #333;
@@ -67,7 +80,7 @@ tr {
 .link {
     display: inline-block;
     cursor: pointer;
-    border-radius: 1.0em;
+    border-radius: 0.5em;
     text-decoration: none;
     font-size: 12.5px;
     font-weight: 500;
@@ -85,11 +98,11 @@ tr {
     margin-right: 6px;
 }
 
-.link:hover {
-    color: #fafafa;
-    background-color: #333;
-    text-decoration: none;
-}
+    .link:hover {
+        color: #fafafa;
+        background-color: #333;
+        text-decoration: none;
+    }
 
 .tile {
     /*background: url(../images/banner1.svg);*/
@@ -97,7 +110,7 @@ tr {
     height: auto;
     display: inline-block;
     cursor: pointer;
-    border-radius: 1.1em;
+    border-radius: 0.5em;
     text-decoration: none;
     font-family: Risque;
     font-size: 1.1em;
@@ -115,31 +128,31 @@ tr {
     white-space: normal;
 }
 
-.tile:before {
-    content: "";
-    display: block;
-    padding-top: 50%; /* initial ratio of 1:1*/
-}
+    .tile:before {
+        content: "";
+        display: block;
+        padding-top: 50%; /* initial ratio of 1:1*/
+    }
 
-.tile:after {
-    content: "";
-    display: block;
-    padding-bottom: 50%; /* initial ratio of 1:1*/
-}
+    .tile:after {
+        content: "";
+        display: block;
+        padding-bottom: 50%; /* initial ratio of 1:1*/
+    }
 
-.tile:hover {
-    /*background: url(../images/banner2.svg);*/
-    color: #fafafa;
-    background-color: #333;
-    text-decoration: none;
-}
+    .tile:hover {
+        /*background: url(../images/banner2.svg);*/
+        color: #fafafa;
+        background-color: #333;
+        text-decoration: none;
+    }
 
 .tile-image {
     padding-top: 0;
     height: 4.0em;
 }
 
-.navbar-nav li a, .navbar-brand {
+.navbar-nav > li > a, .navbar-brand {
     padding-top: 4px !important;
     padding-bottom: 0 !important;
     height: 50px;
@@ -147,15 +160,6 @@ tr {
     float: none;
     vertical-align: bottom;
 }
-
-/*.navbar-nav > li > a, .navbar-brand {
-    padding-top: 4px !important;
-    padding-bottom: 0 !important;
-    height: 50px;
-    display: inline-block;
-    float: none;
-    vertical-align: bottom;
-}*/
 
 .navbar {
     min-height: 50px !important;
@@ -181,11 +185,11 @@ span {
     width: 100%;
 }
 
-.tictactoe td {
-    width: 100px;
-    height: 100px;
-    background: yellow;
-}
+    .tictactoe td {
+        width: 100px;
+        height: 100px;
+        background: yellow;
+    }
 
 .vertical {
     border-left: 1px solid black;
