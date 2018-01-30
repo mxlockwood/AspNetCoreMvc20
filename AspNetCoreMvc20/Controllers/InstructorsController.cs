@@ -80,6 +80,7 @@ namespace AspNetCoreMvc20.Controllers
             }
 
             var instructor = await _context.Instructors
+                .Include(i => i.OfficeAssignment)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (instructor == null)
             {
@@ -116,7 +117,10 @@ namespace AspNetCoreMvc20.Controllers
                 return NotFound();
             }
 
-            var instructor = await _context.Instructors.SingleOrDefaultAsync(m => m.Id == id);
+            var instructor = await _context.Instructors
+                .Include(i => i.OfficeAssignment)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (instructor == null)
             {
                 return NotFound();
@@ -124,36 +128,42 @@ namespace AspNetCoreMvc20.Controllers
             return View(instructor);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,LastName,FirstName,HireDate")] Instructor instructor)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != instructor.Id)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var instructorToUpdate = await _context.Instructors
+                .Include(i => i.OfficeAssignment)
+                .SingleOrDefaultAsync(s => s.Id == id);
+
+            if (await TryUpdateModelAsync<Instructor>(
+                instructorToUpdate,
+                "",
+                i => i.FirstName, i => i.LastName, i => i.HireDate, i => i.OfficeAssignment))
             {
+                if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment?.Location))
+                {
+                    instructorToUpdate.OfficeAssignment = null;
+                }
                 try
                 {
-                    _context.Update(instructor);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!InstructorExists(instructor.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(instructor);
+            return View(instructorToUpdate);
         }
 
         [HttpGet]

@@ -7,7 +7,7 @@
 <h2>Instructors</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <action-text><a asp-action="Create">Create New</a></action-text>
 </p>
 <div class="col-sm-8 col-sm-offset-0 col-md-10 col-md-offset-2 col-lg-12 col-lg-offset-0">
     <table class="table">
@@ -54,10 +54,10 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Index" asp-route-id="@item.Id">Select</a> |
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="link transition_color" asp-action="Index" asp-route-id="@item.Id">Select</a>
+                        <a class="link transition_color" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="link transition_color" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a class="link transition_color" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
                 </tr>
                             }
@@ -83,7 +83,7 @@
                 }
                 <tr class="@selectedRow">
                     <td>
-                        @Html.ActionLink("Select", "Index", new { courseID = item.Id })
+                        @Html.ActionLink("Select", "Index", new { courseID = item.Id }, new { @class = "link transition_color" })
                     </td>
                     <td>
                         @item.Id

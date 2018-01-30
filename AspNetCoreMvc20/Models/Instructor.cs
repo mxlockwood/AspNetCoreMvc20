@@ -34,7 +34,10 @@ namespace AspNetCoreMvc20.Models
             get { return LastName + ", " + FirstName; }
         }
 
+        [Display(Name = "Courses")]
         public ICollection<CourseAssignment> CourseAssignments { get; set; }
+
+        [Display(Name = "Office Location")]
         public OfficeAssignment OfficeAssignment { get; set; }
     }
 }

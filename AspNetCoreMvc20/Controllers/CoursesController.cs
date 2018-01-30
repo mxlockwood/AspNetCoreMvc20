@@ -38,6 +38,7 @@ namespace AspNetCoreMvc20.Controllers
 
             var course = await _context.Courses
                 .Include(c => c.Department)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (course == null)
             {
@@ -50,13 +51,21 @@ namespace AspNetCoreMvc20.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id");
+            PopulateDepartmentsDropDownList();
             return View();
+        }
+
+        private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
+        {
+            var departmentsQuery = from d in _context.Departments
+                                   orderby d.Name
+                                   select d;
+            ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "Id", "Name", selectedDepartment);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Credits,DepartmentId")] Course course)
+        public async Task<IActionResult> Create([Bind("Id,Credits,DepartmentId,Title")] Course course)
         {
             if (ModelState.IsValid)
             {
@@ -64,7 +73,7 @@ namespace AspNetCoreMvc20.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id", course.DepartmentId);
+            PopulateDepartmentsDropDownList(course.DepartmentId);
             return View(course);
         }
 
@@ -76,46 +85,48 @@ namespace AspNetCoreMvc20.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses.SingleOrDefaultAsync(m => m.Id == id);
+            var course = await _context.Courses
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (course == null)
             {
                 return NotFound();
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id", course.DepartmentId);
+            PopulateDepartmentsDropDownList(course.DepartmentId);
             return View(course);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Credits,DepartmentId")] Course course)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != course.Id)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var courseToUpdate = await _context.Courses
+                .SingleOrDefaultAsync(c => c.Id == id);
+
+            if (await TryUpdateModelAsync<Course>(courseToUpdate,
+                "",
+                c => c.Credits, c => c.DepartmentId, c => c.Title))
             {
                 try
                 {
-                    _context.Update(course);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!CourseExists(course.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id", course.DepartmentId);
-            return View(course);
+            PopulateDepartmentsDropDownList(courseToUpdate.DepartmentId);
+            return View(courseToUpdate);
         }
 
         [HttpGet]
@@ -128,6 +139,7 @@ namespace AspNetCoreMvc20.Controllers
 
             var course = await _context.Courses
                 .Include(c => c.Department)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (course == null)
             {
