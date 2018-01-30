@@ -13,6 +13,17 @@
     font-size: 1.25em;
 }
 
+#checkbox {
+    width: 15px;
+    height: 15px;
+    background-color: whitesmoke;
+    margin: 3px 8px;
+    font-size: 10px;
+    border-radius: 1.5em;
+    position: relative;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.4);
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

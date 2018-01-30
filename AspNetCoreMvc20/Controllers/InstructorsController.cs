@@ -119,18 +119,37 @@ namespace AspNetCoreMvc20.Controllers
 
             var instructor = await _context.Instructors
                 .Include(i => i.OfficeAssignment)
+                .Include(i => i.CourseAssignments).ThenInclude(i => i.Course)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (instructor == null)
             {
                 return NotFound();
             }
+            PopulateAssignedCourses(instructor);
             return View(instructor);
         }
 
-        [HttpPost, ActionName("Edit")]
+        private void PopulateAssignedCourses(Instructor instructor)
+        {
+            var allCourses = _context.Courses;
+            var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseId));
+            var viewModel = new List<AssignedCourses>();
+            foreach (var course in allCourses)
+            {
+                viewModel.Add(new AssignedCourses
+                {
+                    CourseId = course.Id,
+                    Title = course.Title,
+                    Assigned = instructorCourses.Contains(course.Id)
+                });
+            }
+            ViewData["Courses"] = viewModel;
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+        public async Task<IActionResult> Edit(int? id, string[] selectedCourses)
         {
             if (id == null)
             {
@@ -139,6 +158,8 @@ namespace AspNetCoreMvc20.Controllers
 
             var instructorToUpdate = await _context.Instructors
                 .Include(i => i.OfficeAssignment)
+                .Include(i => i.CourseAssignments)
+                .ThenInclude(i => i.Course)
                 .SingleOrDefaultAsync(s => s.Id == id);
 
             if (await TryUpdateModelAsync<Instructor>(
@@ -150,6 +171,7 @@ namespace AspNetCoreMvc20.Controllers
                 {
                     instructorToUpdate.OfficeAssignment = null;
                 }
+                UpdateInstructorCourses(selectedCourses, instructorToUpdate);
                 try
                 {
                     await _context.SaveChangesAsync();
@@ -163,7 +185,41 @@ namespace AspNetCoreMvc20.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            UpdateInstructorCourses(selectedCourses, instructorToUpdate);
+            PopulateAssignedCourses(instructorToUpdate);
             return View(instructorToUpdate);
+        }
+
+        private void UpdateInstructorCourses(string[] selectedCourses, Instructor instructorToUpdate)
+        {
+            if (selectedCourses == null)
+            {
+                instructorToUpdate.CourseAssignments = new List<CourseAssignment>();
+                return;
+            }
+
+            var selectedCoursesHS = new HashSet<string>(selectedCourses);
+            var instructorCourses = new HashSet<int>
+                (instructorToUpdate.CourseAssignments.Select(c => c.Course.Id));
+            foreach (var course in _context.Courses)
+            {
+                if (selectedCoursesHS.Contains(course.Id.ToString()))
+                {
+                    if (!instructorCourses.Contains(course.Id))
+                    {
+                        instructorToUpdate.CourseAssignments.Add(new CourseAssignment { InstructorId = instructorToUpdate.Id, CourseId = course.Id });
+                    }
+                }
+                else
+                {
+
+                    if (instructorCourses.Contains(course.Id))
+                    {
+                        CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.SingleOrDefault(i => i.CourseId == course.Id);
+                        _context.Remove(courseToRemove);
+                    }
+                }
+            }
         }
 
         [HttpGet]
